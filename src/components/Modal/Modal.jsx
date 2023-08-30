@@ -1,39 +1,36 @@
-import { useEffect, useRef } from 'react';
+import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import { Overlay, ModalBox } from './Modal.styled';
 
-function Modal({ photo, onCloseModal }) {
-  const modalRef = useRef();
+class Modal extends Component {
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleClose);
+  }
 
-  useEffect(() => {
-    modalRef.current.focus();
-  }, []);
+  componentWillUnmount() {
+    document.addEventListener('keydown', this.handleClose);
+  }
 
-  const handleClose = e => {
-    if (
-      (e.currentTarget === e.target && e.type === 'click') ||
-      e.code === 'Escape'
-    ) {
+  handleClose = e => {
+    const { onCloseModal } = this.props;
+    if (e.currentTarget === e.target || e.code === 'Escape') {
       onCloseModal();
     }
   };
 
-  return createPortal(
-    <Overlay
-      onClick={handleClose}
-      onKeyDown={handleClose}
-      ref={modalRef}
-      tabIndex="-1"
-    >
-      <ModalBox>
-        <img src={photo.largeImageURL} alt={photo.tags} />
-      </ModalBox>
-    </Overlay>,
-    document.body
-  );
+  render() {
+    const { photo } = this.props;
+    return createPortal(
+      <Overlay onClick={this.handleClose}>
+        <ModalBox>
+          <img src={photo.largeImageURL} alt={photo.tags} />
+        </ModalBox>
+      </Overlay>,
+      document.body
+    );
+  }
 }
-
 Modal.propTypes = {
   photo: PropTypes.object.isRequired,
   onCloseModal: PropTypes.func.isRequired,

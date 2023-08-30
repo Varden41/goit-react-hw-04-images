@@ -39,13 +39,11 @@ function App() {
   };
 
   const onLoadMore = () => {
-    setStatus('loading');
     setPage(prevstate => prevstate + 1);
   };
 
   const handleFormSubmit = searchValue => {
     setPage(1);
-    setStatus('loading');
     setsearchQuery(searchValue);
     setPhotos([]);
   };
