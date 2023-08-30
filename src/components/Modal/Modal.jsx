@@ -1,11 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import { Overlay, ModalBox } from './Modal.styled';
 
 function Modal({ photo, onCloseModal }) {
-  const modalRef = useRef();
-
   const handleClose = e => {
     if (e.currentTarget === e.target) {
       onCloseModal();
