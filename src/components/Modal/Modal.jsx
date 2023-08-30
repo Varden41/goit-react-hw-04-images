@@ -1,36 +1,40 @@
-import React, { Component } from 'react';
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import { Overlay, ModalBox } from './Modal.styled';
 
-class Modal extends Component {
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleClose);
-  }
+function Modal({ photo, onCloseModal }) {
+  const modalRef = useRef();
 
-  componentWillUnmount() {
-    document.addEventListener('keydown', this.handleClose);
-  }
-
-  handleClose = e => {
-    const { onCloseModal } = this.props;
-    if (e.currentTarget === e.target || e.code === 'Escape') {
+  const handleClose = e => {
+    if (e.currentTarget === e.target) {
       onCloseModal();
     }
   };
 
-  render() {
-    const { photo } = this.props;
-    return createPortal(
-      <Overlay onClick={this.handleClose}>
-        <ModalBox>
-          <img src={photo.largeImageURL} alt={photo.tags} />
-        </ModalBox>
-      </Overlay>,
-      document.body
-    );
-  }
+  useEffect(() => {
+    const clickEscape = e => {
+      if (e.type === 'click' || e.code === 'Escape') {
+        onCloseModal();
+      }
+    };
+
+    document.addEventListener('keydown', clickEscape);
+    return () => {
+      document.removeEventListener('keydown', clickEscape);
+    };
+  }, []);
+
+  return createPortal(
+    <Overlay onClick={handleClose}>
+      <ModalBox>
+        <img src={photo.largeImageURL} alt={photo.tags} />
+      </ModalBox>
+    </Overlay>,
+    document.body
+  );
 }
+
 Modal.propTypes = {
   photo: PropTypes.object.isRequired,
   onCloseModal: PropTypes.func.isRequired,
