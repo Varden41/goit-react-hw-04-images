@@ -21,7 +21,7 @@ function Modal({ photo, onCloseModal }) {
     return () => {
       document.removeEventListener('keydown', clickEscape);
     };
-  }, []);
+  }, [onCloseModal]);
 
   return createPortal(
     <Overlay onClick={handleClose}>
