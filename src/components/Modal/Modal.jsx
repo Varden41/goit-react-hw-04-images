@@ -12,7 +12,7 @@ function Modal({ photo, onCloseModal }) {
 
   useEffect(() => {
     const clickEscape = e => {
-      if (e.type === 'click' || e.code === 'Escape') {
+      if (e.code === 'Escape') {
         onCloseModal();
       }
     };
